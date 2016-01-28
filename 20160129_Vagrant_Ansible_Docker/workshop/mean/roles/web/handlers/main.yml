@@ -1,0 +1,14 @@
+---
+
+- name: stop application
+  command: pm2 delete all
+  become: yes
+  ignore_errors: yes
+      
+- name: start application
+  command: pm2 start {{ app_path }}/{{ server_file}}
+  ignore_errors: yes
+  become: yes
+
+- name: restart nginx
+  service: name=nginx state=restarted
