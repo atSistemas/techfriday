@@ -22,6 +22,7 @@
           src=/tmp/jenkins.war
           dest=/var/lib/tomcat7/webapps/jenkins.war
           mode=0644
+
     - name: start Tomcat to pickup and install Jenkins
       service: name=tomcat7 state=started
 
