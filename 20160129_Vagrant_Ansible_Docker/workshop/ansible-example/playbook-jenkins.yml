@@ -16,7 +16,7 @@
 
     - name: Upload Jenkins to host
       copy: >
-          src=/tmp/jenkins2.war
+          src=/tmp/jenkins.war
           dest=/usr/share/tomcat/webapps/jenkins.war
           mode=0644
     - name: start Tomcat to pickup and install Jenkins
