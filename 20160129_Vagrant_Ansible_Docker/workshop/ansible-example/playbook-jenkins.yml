@@ -3,23 +3,23 @@
   sudo: yes
   tasks:
     - name: ensure Tomcat is at the latest version
-      apt: name=tomcat7 state=latest
+      apt: name=tomcat7 state=latest update_cache=yes
 
     - name: ensure Tomcat is stopped
-      service: name=Tomcat state=stopped
+      service: name=tomcat7 state=stopped
 
     - name: download Jenkins
-      get_url: url="http://mirrors.Jenkins-ci.org/war/1.549/Jenkins.war" dest=/tmp/Jenkins.war mode=0644
+      get_url: url="https://updates.jenkins-ci.org/download/war/1.549/jenkins.war" dest=/tmp/jenkins.war mode=0644
 
-    - name: "Create the /var/lib/Jenkins directory"
-      file: path=/var/lib/Jenkins/ owner=tomcat group=tomcat mode=0777 state=directory
+    - name: "Create the /var/lib/jenkins directory"
+      file: path=/var/lib/jenkins/ owner=tomcat7 group=tomcat7 mode=0777 state=directory
 
     - name: Upload Jenkins to host
       copy: >
-          src=/tmp/Jenkins.war
-          dest=/usr/share/Tomcat/webapps/Jenkins.war
+          src=/tmp/jenkins2.war
+          dest=/usr/share/tomcat/webapps/jenkins.war
           mode=0644
     - name: start Tomcat to pickup and install Jenkins
-      service: name=Tomcat state=started
+      service: name=tomcat7 state=started
 
-    - wait_for: path=/var/lib/Jenkins/plugins/
+    - wait_for: path=/var/lib/jenkins/plugins/
