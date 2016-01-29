@@ -1,0 +1,16 @@
+---
+
+- name: Create a {{ application_name }} virtual machine via vagrant
+  hosts: localhost
+  sudo: yes
+  connection: local
+  vars:
+    - setup_git_repo: yes
+
+  vars_files:
+    - env_vars/local
+
+  roles:
+    - base
+    - db
+    - web

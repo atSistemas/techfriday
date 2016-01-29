@@ -1,0 +1,47 @@
+---
+
+
+
+#- name: Install base packages
+#  apt: name={{ item }} force=yes state=latest
+#  with_items:
+#    - build-essential
+#    - ntp
+#    - htop
+#    - git
+#    - nodejs
+#    - npm
+#  tags: packages
+
+
+- name: Install base build-essential
+  apt: name=build-essential force=yes state=latest
+
+- name: Install base ntp
+  apt: name=ntp force=yes state=latest
+
+- name: Install base htop
+  apt: name=htop force=yes state=latest
+
+- name: Install base git
+  apt: name=git force=yes state=latest
+
+- name: Install base nodejs
+  apt: name=nodejs force=yes state=latest
+
+- name: Install base npm
+  apt: name=npm force=yes state=latest
+
+
+
+
+
+# - name: Install packages via npm
+#   npm: name={{ item }} global=yes
+#   with_items:
+#     - pm2
+#     - yo
+#     - bower
+#     - grunt-cli
+#     - gulp
+#   tags: packages
