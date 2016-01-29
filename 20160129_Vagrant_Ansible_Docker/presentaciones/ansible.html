@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>Ansible - Bringing Sanity to Configuration Management</title>
+
+    <meta name="description" content="Using Ansible to bring sanity in setting up and maintaining servers">
+    <meta name="author" content="Ashok Modi">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="reveal.js/css/theme/sky.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section>
+          <h1>Ansible</h1>
+          <h3>Bringing Sanity to Configuration Management</h3>
+        </section>
+
+        <section>
+          <h2>Agenda</h2>
+          <ul>
+            <li>What is Ansible</li>
+            <li>Why use Ansible</li>
+            <li>Components
+              <ul>
+                <li>Inventory</li>
+                <li>Playbooks</li>
+                <li>Roles</li>
+              </ul>
+            </li>
+            <li>Demo</li>
+          </ul>
+          <p><small>Ask questions any time</small></p>
+        </section>
+
+        <section>
+          <h2>What is ansible?</h2>
+          <ul>
+            <li>Configuration Management Tool (what is that?)</li>
+            <li>Written in Python (like Django, Flask, Fabric)</li>
+            <li>Uses YAML format*</li>
+          </ul>
+          <p><small>* Except for the inventory file</small></p>
+        </section>
+
+        <section>
+          <h2>Why use Ansible?</h2>
+          <ul>
+            <li>Well maintained</li>
+            <li>"Easiest to understand"</li>
+            <li>Few dependencies (only need SSH!)</li>
+          </ul>
+        </section>
+
+        <section>
+          <section>
+            <h2>Components</h2>
+            <h3>Inventory</h3>
+          </section>
+          <section>
+            <h2>Inventory</h2>
+            <ul>
+              <li>Written in INI-like format</li>
+              <li>Consists of hosts, groups</li>
+              <li>Hosts are IP address of server along with additional info (ssh port to connect, ssh password, sudo password, etc)</li>
+              <li>Groups are collections of hosts, to denote a host will run certain playbooks</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Inventory</h2>
+            <ul>
+              <li>Can pull from multiple files</li>
+              <li>Can pull from dynamic/cloud sources</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Inventory</h2>
+            <h3>Example</h3>
+            <pre>
+[application]
+application.example.com
+multi.example.com
+12.34.56.78
+
+[webservers]
+foo.example.com ansible_ssh_user=btmash
+bar.example.com ansible_ssh_user=btmash ansible_ssh_pass=NoWayMan!
+multi.example.com
+
+[dbservers]
+one.example.com
+two.example.com
+three.example.com
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Components</h2>
+            <h3>Playbooks</h3>
+          </section>
+          <section>
+            <h2>Playbooks</h2>
+            <ul>
+              <li>Design Plans</li>
+              <li>Manage configurations</li>
+              <li>Map groups of hosts to roles (which define tasks)</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Playbooks</h2>
+            <h3>Example</h3>
+            <pre>
+---
+- hosts: webservers
+  vars:
+    http_port: 80
+    max_clients: 200
+  remote_user: root
+  tasks:
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: write the apache config file
+    template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+    notify:
+    - restart apache
+  - name: ensure apache is running (and enable it at boot)
+    service: name=httpd state=started enabled=yes
+  handlers:
+    - name: restart apache
+      service: name=httpd state=restarted
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h2>Components</h2>
+            <h3>Roles</h3>
+          </section>
+          <section>
+            <h2>Roles</h2>
+            <ul>
+              <li>Way to make a playbook concise</li>
+              <li>Useful for reusability</li>
+              <li>Playbooks then include roles</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Roles</h2>
+            <code>provision.yml</code>
+            <pre>
+---
+- hosts: webservers
+  vars:
+    http_port: 80
+    max_clients: 200
+  remote_user: root
+  roles:
+    - apache
+            </pre>
+            <code>roles/apache/tasks/main.yml</code>
+            <pre>
+---
+  - name: ensure apache is at the latest version
+    yum: pkg=httpd state=latest
+  - name: write the apache config file
+    template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+    notify:
+    - restart apache
+  - name: ensure apache is running (and enable it at boot)
+    service: name=httpd state=started enabled=yes
+            </pre>
+          </section>
+        </section>
+
+        <section>
+          <h2>Other concepts</h2>
+          <ul>
+            <li><a href="http://docs.ansible.com/playbooks_roles.html#role-dependencies">Dependencies</a></li>
+            <li><a href="http://docs.ansible.com/playbooks_variables.html">Variables</a></li>
+            <li><a href="http://docs.ansible.com/template_module.html">Templates (Jinja2)</a></li>
+          </ul>
+        </section>
+
+        <section>
+        	<h1>Demo Time</h1>
+        </section>
+
+        <section id="thank-you" class="slide">
+        <h1>Thank you!</h1>
+        <p>Original Slides <a href="https://github.com/btmash/ansible-reveal.git">@Ashok Modi</a></p>
+        <p>More at: <a href="https://github.com/atSistemas/techfriday/tree/master/20160129_Vagrant_Ansible_Docker">github.com/atSistemas/techfriday</a></p>
+        <p><a href="https://twitter.com/atsistemas">@atsistemas</a></p>
+        <figure>
+        <img src="http://i.creativecommons.org/l/by/4.0/88x31.png" alt="CC-BY" /><figcaption>CC-BY</figcaption>
+        </figure>
+        </section>
+
+
+      </div>
+
+    </div>
+
+    <script src="reveal.js/lib/js/head.min.js"></script>
+    <script src="reveal.js/js/reveal.js"></script>
+
+    <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'reveal.js/plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>

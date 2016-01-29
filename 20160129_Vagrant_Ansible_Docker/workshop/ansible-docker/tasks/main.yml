@@ -1,21 +1,24 @@
 ---
 
-- name: Get upstream APT GPG key
-  apt_key:
-    id: '{{ docker_upstream_key }}'
-    keyserver: '{{ ansible_local.core.keyserver
-                   if (ansible_local|d() and ansible_local.core|d() and
-                       ansible_local.core.keyserver)
-                   else "hkp://pool.sks-keyservers.net" }}'
-    state: 'present'
-  when: docker_upstream|d() | bool
+- name: Install (or update) docker.io
+  apt:
+    name: docker.io
+    state: latest
+    update_cache: yes
+  when: "ansible_distribution_version == '14.04'"
 
-- name: Configure upstream APT repository
-  apt_repository:
-    repo: '{{ docker_upstream_repository }}'
-    state: 'present'
-    update_cache: True
-  when: docker_upstream|d() | bool
+- name: Link docker binaries
+  file:
+    src: /usr/bin/docker.io
+    dest: /usr/local/bin/docker
+    owner: root
+    group: root
+    state: link
+  when: "ansible_distribution_version == '14.04'"
+
+- name: Check if docker installed
+  command: /usr/bin/test -e /etc/default/docker
+  register: docker_installed
 
 - name: Install required packages
   apt:

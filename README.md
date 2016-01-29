@@ -1,4 +1,4 @@
-e# TechFriday
+# TechFriday
 
 ## Objetivos
 
@@ -12,7 +12,5 @@ e# TechFriday
 ## Periodicidad
 
     1 TechFriday al mes
-
-# Ediciones Realizadas
 
 
