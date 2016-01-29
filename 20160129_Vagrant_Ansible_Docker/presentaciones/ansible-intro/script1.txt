@@ -1,0 +1,92 @@
+
+---------------------------------
+apt-get install apache
+
+
+
+
+
+---------------------------------
+sudo apt-get install apache
+
+
+
+
+
+
+---------------------------------
+paquete="apache"
+sudo apt-get install $paquete
+
+
+
+
+
+---------------------------------
+paquete="apache"
+salida=""
+salida=`sudo apt-get install $paquete`
+
+
+
+
+---------------------------------
+paquete="apache"
+if [ "${BASH_VERSINFO}" -lt 4 ]; then
+  salida=""
+  salida=`sudo apt-get install $paquete`
+fi
+
+
+
+
+---------------------------------
+paquete="apache"
+if [ "${BASH_VERSINFO}" -lt 4 ]; then
+  salida=""
+  salida=`sudo apt-get update && sudo apt-get install $paquete`
+fi
+
+
+
+
+---------------------------------
+paquete="apache"
+if [ "${BASH_VERSINFO}" -lt 4 ]; then
+  PKG_OK=`dpkg-query -W --showformat='${Status}\n' $paquete|grep "install ok installed"``
+  if [ "" == "$PKG_OK" ]; then
+    salida=""
+    salida=`sudo apt-get update && sudo apt-get install $paquete`
+  fi
+fi
+
+
+
+
+---------------------------------
+paquetes="apache wget php"
+for paquete in $paquetes; do
+  if [ "${BASH_VERSINFO}" -lt 4 ]; then
+    PKG_OK=`dpkg-query -W --showformat='${Status}\n' $paquete|grep "install ok installed"``
+    if [ "" == "$PKG_OK" ]; then
+      salida=""
+      salida=`sudo apt-get update && sudo apt-get install $paquete`
+      fi
+    fi
+done
+
+
+
+
+---------------------------------
+Para otras versiones de bash ....
+---------------------------------
+Para otros sistemas operativos ....
+---------------------------------
+En otra maquina ....
+---------------------------------
+En una lista de maquinas ....
+---------------------------------
+Otras operaciones ....
+---------------------------------
+.........
