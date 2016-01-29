@@ -14,12 +14,14 @@
     - name: "Create the /var/lib/jenkins directory"
       file: path=/var/lib/jenkins/ owner=tomcat7 group=tomcat7 mode=0777 state=directory
 
+    - name: "Create the Home directory"
+      file: path=/usr/share/tomcat7/.jenkins owner=tomcat7 group=tomcat7 mode=0777 state=directory
+
     - name: Upload Jenkins to host
       copy: >
           src=/tmp/jenkins.war
-          dest=/usr/share/tomcat/webapps/jenkins.war
+          dest=/var/lib/tomcat7/webapps/jenkins.war
           mode=0644
     - name: start Tomcat to pickup and install Jenkins
       service: name=tomcat7 state=started
 
-    - wait_for: path=/var/lib/jenkins/plugins/
