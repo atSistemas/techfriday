@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="payloadpersona" type="persona" />
+		<xs:complexType name="persona">
+            <xs:sequence>
+                <xs:element name="personaId" type="xs:int" minOccurs="1"/>
+                <xs:element name="nombre" type="xs:string"/>
+                <xs:element name="apellido1" type="xs:string"/>
+                <xs:element name="apellido2" type="xs:string"/>
+                <xs:element name="activo" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>		
+</xs:schema>
