@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<data-sources>
-	<data-source id="h2_embedded-15765bb2eff-50817a95626ded20" provider="generic" driver="h2_embedded" name="H2 - test2" create-date="1474880579696" save-password="true" show-system-objects="true" read-only="false">
-		<connection server="" database="/usr/local/h2/data/test2" url="jdbc:h2:/usr/local/h2/data/test2" user="sa" type="dev">
-			<bootstrap/>
-		</connection>
-	</data-source>
-</data-sources>
