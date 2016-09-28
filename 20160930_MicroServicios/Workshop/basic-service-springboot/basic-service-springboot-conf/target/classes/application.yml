@@ -1,0 +1,85 @@
+# For standard Spring Boot parameters see:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+
+
+spring:
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      config:
+        enabled: true
+        prefix: configuration
+        defaultContext: apps
+        profileSeparator: '::'
+        format: YAML
+
+
+# Default configuration (shared by all profiles).
+server:
+  port: 8888
+  session:
+    timeout: 600
+
+
+# Spring Cloud Ribbon configuration
+ribbon:
+  IsSecure: true
+  MaxAutoRetries: 1
+  eureka:
+    enabled: false
+  TrustStore: keystore.jks
+  TrustStorePassword: password
+
+# Name of HTTP headers that Zuul filters will read and propagate
+http:
+  headers:
+    # Name of the HTTP header that includes the logging token
+    token: Token
+    # Name of the HTTP header that includes the session token
+    session: Session
+    # Name of the HTTP header that includes (Base 64 encoded) user data
+    user-data: User-data
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com:
+      netflix: INFO
+      atsistemas: DEBUG
+    feign: DEBUG
+    org:
+      springframework:
+        web: INFO
+        cloud: INFO
+      apache:
+        http: WARN
+  pattern:
+    console: '%d %-5level %-50logger{50} [${spring.profiles.active}] [%-32X{${http.headers.token}}]: %msg%n'
+
+
+---
+
+spring:
+  profiles: develop
+  application:
+    name: basic-service-techfriday-${spring.profiles.active}
+
+  
+ribbon:
+  TrustStore: /keystore.jks
+  TrustStorePassword: password
+
+hibernate:
+    generate_statistics: false
+    show_sql: false
+    format_sql: false
+    dialect: org.hibernate.dialect.H2Dialect
+
+jdbc:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:/usr/local/h2/data/test2
+    username: sa
+    password:
+    
