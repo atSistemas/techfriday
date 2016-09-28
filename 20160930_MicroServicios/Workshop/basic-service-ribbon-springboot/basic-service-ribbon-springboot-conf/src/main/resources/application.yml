@@ -1,0 +1,57 @@
+# For standard Spring Boot parameters see:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+
+
+
+
+
+# Default configuration (shared by all profiles).
+server:
+  port: 8887
+  session:
+    timeout: 600
+
+
+# Name of HTTP headers that Zuul filters will read and propagate
+http:
+  headers:
+    # Name of the HTTP header that includes the logging token
+    token: Token
+    # Name of the HTTP header that includes the session token
+    session: Session
+    # Name of the HTTP header that includes (Base 64 encoded) user data
+    user-data: User-data
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com:
+      netflix: INFO
+      atsistemas: DEBUG
+    feign: DEBUG
+    org:
+      springframework:
+        web: INFO
+        cloud: INFO
+      apache:
+        http: WARN
+  pattern:
+    console: '%d %-5level %-50logger{50} [${spring.profiles.active}] [%-32X{${http.headers.token}}]: %msg%n'
+
+
+---
+
+spring:
+  profiles: develop
+  application:
+    name: basic-service-techfriday-ribbon-${spring.profiles.active}
+
+  
+basic-service-techfriday-develop:
+  ribbon:
+    eureka:
+      enabled: false
+    listOfServers: localhost:8888,localhost:9999
+    ServerListRefreshInterval: 15000
+    

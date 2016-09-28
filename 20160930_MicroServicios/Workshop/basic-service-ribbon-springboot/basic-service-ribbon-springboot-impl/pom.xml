@@ -7,4 +7,44 @@
   </parent>
   <artifactId>basic-service-ribbon-springboot-impl</artifactId>
   <name>Implementacion</name>
+  
+  	<properties>
+		<spring.consul.version>1.0.2.RELEASE</spring.consul.version>
+		<spring.netflix.version>1.1.5.RELEASE</spring.netflix.version>
+		<springfox.swagger2.version>2.5.0</springfox.swagger2.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${project.parent.artifactId}-conf</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<!-- Spring Cloud -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-consul-all</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>${start-class}</mainClass>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+  
+  
 </project>

@@ -88,9 +88,10 @@ public class PersonaController {
 	public ResponseEntity<Persona> buscarPersona(@PathVariable Integer id) throws PersonaServiceException {
 
 		Persona persona = personaService.obtenerPersona(id);
-		if (persona==null){
+		if (persona == null) {
 			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
+		logger.info("Get Persona request {}, {}, {}", persona.getNombre(), persona.getApellido1(), persona.getApellido2());
 		return new ResponseEntity<>(persona, HttpStatus.ACCEPTED);
 
 	}
